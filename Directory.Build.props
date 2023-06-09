@@ -1,0 +1,30 @@
+<Project>
+
+  <PropertyGroup>
+    <Version>1.1.0</Version>
+    <Company>Jerro</Company>
+    <Copyright>Copyright (C) Jerry Berry</Copyright>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <NoWarn>CS1591,RCS1194</NoWarn>
+  </PropertyGroup>
+
+  <!-- Disable nullability warnings on frameworks where BCL is not annotated -->
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net472'">
+    <Nullable>annotations</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>$(Company)</Authors>
+    <PackageTags>http client simple</PackageTags>
+    <PackageProjectUrl>https://github.com/jerry08/Httpz</PackageProjectUrl>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+  </PropertyGroup>
+
+</Project>
