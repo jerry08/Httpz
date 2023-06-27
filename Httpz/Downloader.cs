@@ -24,6 +24,14 @@ public class Downloader : IDownloader
     /// <summary>
     /// Initializes an instance of <see cref="Downloader" />.
     /// </summary>
+    public Downloader(Func<HttpClient> httpClientFunc)
+    {
+        _httpClientFactory = new HttpClientFactory(httpClientFunc);
+    }
+
+    /// <summary>
+    /// Initializes an instance of <see cref="Downloader" />.
+    /// </summary>
     public Downloader() : this(new HttpClientFactory())
     {
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Httpz.Exceptions;
@@ -20,6 +21,13 @@ public class HlsDownloader : Downloader
     /// Initializes an instance of <see cref="HlsDownloader" />.
     /// </summary>
     public HlsDownloader(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
+    {
+    }
+
+    /// <summary>
+    /// Initializes an instance of <see cref="HlsDownloader" />.
+    /// </summary>
+    public HlsDownloader(Func<HttpClient> httpClientFunc) : base(httpClientFunc)
     {
     }
 
