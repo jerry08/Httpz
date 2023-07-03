@@ -56,7 +56,7 @@ public class PlaylistDocument
     /// Loads the playlist from a stream.
     /// </summary>
     /// <exception cref="PlaylistDocumentLoadException" />
-    public Task LoadAsync(StreamReader reader, Uri originalUri)
+    public ValueTask LoadAsync(StreamReader reader, Uri originalUri)
     {
         using var tokenizer = new PlaylistTokenizer(reader);
         return LoadAsync(tokenizer, originalUri);
@@ -66,7 +66,7 @@ public class PlaylistDocument
     /// Loads the playlist from a stream.
     /// </summary>
     /// <exception cref="PlaylistDocumentLoadException" />
-    public async Task LoadAsync(Stream stream, Uri baseUri)
+    public async ValueTask LoadAsync(Stream stream, Uri baseUri)
     {
         using var reader = new StreamReader(stream);
         await LoadAsync(reader, baseUri);
@@ -76,7 +76,7 @@ public class PlaylistDocument
     /// Loads the playlist from a string.
     /// </summary>
     /// <exception cref="PlaylistDocumentLoadException" />
-    public async Task LoadAsync(string content, Uri baseUri)
+    public async ValueTask LoadAsync(string content, Uri baseUri)
     {
         using var stream = new MemoryStream();
         using var streamWriter = new StreamWriter(stream);
@@ -95,7 +95,7 @@ public class PlaylistDocument
         public PlaylistTagValue? StreamInf { get; set; }
     }
 
-    private async Task LoadAsync(PlaylistTokenizer tokenizer, Uri originalUri)
+    private async ValueTask LoadAsync(PlaylistTokenizer tokenizer, Uri originalUri)
     {
         Clear();
 

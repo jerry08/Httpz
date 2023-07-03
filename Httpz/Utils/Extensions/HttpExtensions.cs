@@ -335,7 +335,7 @@ public static class HttpExtensions
         return await http.ExecuteAsync(request, cancellationToken);
     }
 
-    public static async Task<string> ExecuteAsync(
+    public static async ValueTask<string> ExecuteAsync(
         this HttpClient http,
         HttpRequestMessage request,
         CancellationToken cancellationToken = default)

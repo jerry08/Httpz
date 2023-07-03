@@ -34,7 +34,7 @@ public class HttpZipStream : IDisposable
     /// </summary>
     public void SetContentLength(long value) { ContentLength = value; }
 
-    public async Task<long> GetContentLengthAsync()
+    public async ValueTask<long> GetContentLengthAsync()
     {
         try
         {
@@ -53,7 +53,7 @@ public class HttpZipStream : IDisposable
     }
 
     HttpZipDirectory? directoryData { get; set; }
-    private async Task<bool> LocateDirectoryAsync()
+    private async ValueTask<bool> LocateDirectoryAsync()
     {
         try
         {
@@ -104,7 +104,7 @@ public class HttpZipStream : IDisposable
         }
     }
 
-    public async Task<List<HttpZipEntry>> GetEntriesAsync()
+    public async ValueTask<List<HttpZipEntry>> GetEntriesAsync()
     {
         try
         {
@@ -182,7 +182,7 @@ public class HttpZipStream : IDisposable
     }
 
     [Obsolete]
-    public async Task ExtractAsync(List<HttpZipEntry> entryList, Action<MemoryStream> resultCallback)
+    public async ValueTask ExtractAsync(List<HttpZipEntry> entryList, Action<MemoryStream> resultCallback)
     {
         try
         {
@@ -192,7 +192,7 @@ public class HttpZipStream : IDisposable
         catch (Exception) { throw; }
     }
 
-    public async Task ExtractAsync(HttpZipEntry entry, Action<MemoryStream> resultCallback)
+    public async ValueTask ExtractAsync(HttpZipEntry entry, Action<MemoryStream> resultCallback)
     {
         try
         {
@@ -205,7 +205,7 @@ public class HttpZipStream : IDisposable
         catch (Exception) { throw; }
     }
 
-    public async Task<byte[]> ExtractAsync(HttpZipEntry entry)
+    public async ValueTask<byte[]> ExtractAsync(HttpZipEntry entry)
     {
         try
         {

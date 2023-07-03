@@ -31,7 +31,7 @@ internal partial class ResizableSemaphore : IDisposable
         }
     }
 
-    public async Task<IDisposable> AcquireAsync(CancellationToken cancellationToken = default)
+    public async ValueTask<IDisposable> AcquireAsync(CancellationToken cancellationToken = default)
     {
         if (_isDisposed)
             throw new ObjectDisposedException(GetType().Name);

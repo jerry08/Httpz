@@ -21,7 +21,7 @@ public class FileTldRuleProvider : ITldRuleProvider
     }
 
     ///<inheritdoc/>
-    public async Task<IEnumerable<TldRule>> BuildAsync()
+    public async ValueTask<IEnumerable<TldRule>> BuildAsync()
     {
         var ruleData = await LoadFromFile().ConfigureAwait(false);
 
@@ -30,7 +30,7 @@ public class FileTldRuleProvider : ITldRuleProvider
         return rules;
     }
 
-    private async Task<string> LoadFromFile()
+    private async ValueTask<string> LoadFromFile()
     {
         if (!File.Exists(_fileName))
         {

@@ -7,7 +7,7 @@ namespace Httpz.Utils.Extensions;
 
 internal static class StreamExtensions
 {
-    public static async Task CopyToAsync(this Stream source,
+    public static async ValueTask CopyToAsync(this Stream source,
         Stream destination,
         IProgress<double>? progress = null,
         long totalLength = 0,
@@ -35,7 +35,7 @@ internal static class StreamExtensions
         return ms.ToArray();
     }
 
-    public static async Task<byte[]> ReadFullyAsync(this Stream input)
+    public static async ValueTask<byte[]> ReadFullyAsync(this Stream input)
     {
         using var ms = new MemoryStream();
         await input.CopyToAsync(ms);

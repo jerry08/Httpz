@@ -46,7 +46,7 @@ public class FileCacheProvider : ICacheProvider
     }
 
     ///<inheritdoc/>
-    public async Task<string> GetAsync()
+    public async ValueTask<string> GetAsync()
     {
         if (!IsCacheValid())
         {
@@ -58,7 +58,7 @@ public class FileCacheProvider : ICacheProvider
     }
 
     ///<inheritdoc/>
-    public async Task SetAsync(string data)
+    public async ValueTask SetAsync(string data)
     {
         using var streamWriter = File.CreateText(_cacheFilePath);
         await streamWriter.WriteAsync(data).ConfigureAwait(false);

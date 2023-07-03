@@ -12,5 +12,5 @@ public interface ITldRuleProvider
     /// Loads the plain text data from a source and parse the public suffix rules
     /// </summary>
     /// <returns>Returns the TldRules</returns>
-    Task<IEnumerable<TldRule>> BuildAsync();
+    ValueTask<IEnumerable<TldRule>> BuildAsync();
 }

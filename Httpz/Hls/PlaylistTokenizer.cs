@@ -59,7 +59,7 @@ public class PlaylistTokenizer : IDisposable
     /// Tries to read the next token from the input stream asynchronously.
     /// </summary>
     /// <returns>The read token, or NULL if the input stream has reached its end.</returns>
-    public async Task<PlaylistToken?> ReadAsync()
+    public async ValueTask<PlaylistToken?> ReadAsync()
     {
         while (!_reader.EndOfStream)
         {

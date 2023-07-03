@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Httpz.Exceptions;
 using Httpz.Utils.Extensions;
 
 namespace Httpz;
@@ -36,7 +37,7 @@ public class Downloader : IDownloader
     {
     }
 
-    public async Task DownloadAsync(
+    public async ValueTask DownloadAsync(
         string url,
         string filePath,
         Dictionary<string, string>? headers = null,
@@ -45,7 +46,7 @@ public class Downloader : IDownloader
         CancellationToken cancellationToken = default)
         => await DownloadAsync(new Uri(url), filePath, headers, progress, append, cancellationToken);
 
-    public async Task DownloadAsync(
+    public async ValueTask DownloadAsync(
         Uri url,
         string filePath,
         Dictionary<string, string>? headers = null,
@@ -88,6 +89,10 @@ public class Downloader : IDownloader
         var totalLength = response.Content.Headers.ContentLength ?? 0;
 
         var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+        var dir = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(dir))
+            throw new HttpzException($"Directory: '{dir}' does not exist.");
 
         //var file = File.Create(filePath);
         using var file = new FileStream(filePath, FileMode.OpenOrCreate);

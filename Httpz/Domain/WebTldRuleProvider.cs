@@ -40,7 +40,7 @@ public class WebTldRuleProvider : ITldRuleProvider
     }
 
     ///<inheritdoc/>
-    public async Task<IEnumerable<TldRule>> BuildAsync()
+    public async ValueTask<IEnumerable<TldRule>> BuildAsync()
     {
         var ruleParser = new TldRuleParser();
 
@@ -64,7 +64,7 @@ public class WebTldRuleProvider : ITldRuleProvider
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    public async Task<string> LoadFromUrlAsync(string url)
+    public async ValueTask<string> LoadFromUrlAsync(string url)
     {
         using var httpClient = new HttpClient();
         using var response = await httpClient.GetAsync(url).ConfigureAwait(false);

@@ -38,13 +38,13 @@ public class HlsDownloader : Downloader
     {
     }
 
-    public async Task<List<HlsStreamMetadata>> GetQualitiesAsync(
+    public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         string url,
         Dictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default)
         => await GetQualitiesAsync(new Uri(url), headers, cancellationToken);
 
-    public async Task<List<HlsStreamMetadata>> GetQualitiesAsync(
+    public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         Uri uri,
         Dictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default)
@@ -74,7 +74,7 @@ public class HlsDownloader : Downloader
         return grabResult;
     }
 
-    private async Task<PlaylistDocument> GetPlaylistDocumentAsync(
+    private async ValueTask<PlaylistDocument> GetPlaylistDocumentAsync(
         //Stream stream,
         string stream,
         Uri uri)
@@ -98,7 +98,7 @@ public class HlsDownloader : Downloader
     /// with the audio/video, you can run the ffmpeg command:
     /// ffmpeg -i C:\path\video.ts -acodec copy -vcodec copy C:\path\video.mp4
     /// </summary>
-    public async Task DownloadAsync(
+    public async ValueTask DownloadAsync(
         HlsStream stream,
         string filePath,
         Dictionary<string, string>? headers = null,
@@ -125,7 +125,7 @@ public class HlsDownloader : Downloader
     /// <summary>
     /// Downloads a hls/m3u8 video from a url.
     /// </summary>
-    public async Task DownloadAllThenMergeAsync(
+    public async ValueTask DownloadAllThenMergeAsync(
         HlsStream stream,
         Dictionary<string, string> headers,
         string filePath,

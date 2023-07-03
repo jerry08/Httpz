@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 internal static class StreamPolyfills
 {
 #if !NETSTANDARD2_1 && !NETCOREAPP3_0
-    public static async Task<int> ReadAsync(this Stream stream, byte[] buffer, CancellationToken cancellationToken) =>
+    public static async ValueTask<int> ReadAsync(this Stream stream, byte[] buffer, CancellationToken cancellationToken) =>
         await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 #endif
 
-    public static async Task<Stream> ReadAsStreamAsync(
+    public static async ValueTask<Stream> ReadAsStreamAsync(
         this HttpContent httpContent,
         CancellationToken cancellationToken)
     {
@@ -21,7 +21,7 @@ internal static class StreamPolyfills
         return await httpContent.ReadAsStreamAsync();
     }
 
-    public static async Task<string> ReadAsStringAsync(
+    public static async ValueTask<string> ReadAsStringAsync(
         this HttpContent httpContent,
         CancellationToken cancellationToken)
     {

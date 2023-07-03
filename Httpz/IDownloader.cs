@@ -7,7 +7,7 @@ namespace Httpz;
 
 public interface IDownloader
 {
-    Task DownloadAsync(
+    ValueTask DownloadAsync(
         string url,
         string filePath,
         Dictionary<string, string>? headers = null,
@@ -15,7 +15,7 @@ public interface IDownloader
         bool append = false,
         CancellationToken cancellationToken = default);
 
-    Task DownloadAsync(
+    ValueTask DownloadAsync(
         Uri url,
         string filePath,
         Dictionary<string, string>? headers = null,
