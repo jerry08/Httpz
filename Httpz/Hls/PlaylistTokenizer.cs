@@ -34,9 +34,7 @@ public class PlaylistTokenizer : IDisposable
     }
 
     public PlaylistTokenizer(Stream stream, bool ownStream = true)
-        : this(new StreamReader(stream, Encoding.UTF8, false, 1024, !ownStream))
-    {
-    }
+        : this(new StreamReader(stream, Encoding.UTF8, false, 1024, !ownStream)) { }
 
     /// <summary>
     /// Tries to read the next token from the input stream.

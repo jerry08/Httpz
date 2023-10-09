@@ -20,11 +20,10 @@ public class FileCacheProvider : ICacheProvider
     /// <param name="cacheTimeToLive"></param>
     public FileCacheProvider(
         string cacheFileName = "publicsuffixcache.dat",
-        TimeSpan? cacheTimeToLive = null)
+        TimeSpan? cacheTimeToLive = null
+    )
     {
-        _timeToLive = cacheTimeToLive.HasValue
-            ? cacheTimeToLive.Value
-            : TimeSpan.FromDays(1);
+        _timeToLive = cacheTimeToLive.HasValue ? cacheTimeToLive.Value : TimeSpan.FromDays(1);
 
         var tempPath = Path.GetTempPath();
         _cacheFilePath = Path.Combine(tempPath, cacheFileName);
@@ -36,8 +35,7 @@ public class FileCacheProvider : ICacheProvider
         var cacheInvalid = true;
 
         var fileInfo = new FileInfo(_cacheFilePath);
-        if (fileInfo.Exists
-            && fileInfo.LastWriteTimeUtc > DateTime.UtcNow.Subtract(_timeToLive))
+        if (fileInfo.Exists && fileInfo.LastWriteTimeUtc > DateTime.UtcNow.Subtract(_timeToLive))
         {
             cacheInvalid = false;
         }

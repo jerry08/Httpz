@@ -15,7 +15,8 @@ public class HlsStreamMetadata
         int bandwidth,
         MediaFormat format,
         MediaFormat outputFormat,
-        HlsStream? stream)
+        HlsStream? stream
+    )
     {
         ResourceUri = resourceUri;
         Name = name;

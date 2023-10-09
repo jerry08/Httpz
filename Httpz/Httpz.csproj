@@ -7,12 +7,14 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-    <Reference Include="System.Net.Http" />
+  <ItemGroup>
+    <PackageReference Include="CSharpier.MsBuild" Version="0.25.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="all" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" Condition="'$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net461'" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net461'">
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup Condition="$(TargetFramework.Contains('net5')) != true and $(TargetFramework.Contains('net6')) != true">

@@ -15,7 +15,8 @@ public class HttpZipStream : IDisposable
     private HttpClient httpClient { get; set; }
     private bool LeaveHttpClientOpen { get; }
 
-    public HttpZipStream(string httpUrl) : this(httpUrl, new HttpClient())
+    public HttpZipStream(string httpUrl)
+        : this(httpUrl, new HttpClient())
     {
         LeaveHttpClientOpen = true;
     }
@@ -24,7 +25,9 @@ public class HttpZipStream : IDisposable
     {
         httpUrl = url;
         this.httpClient = httpClient;
-        this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
+        this.httpClient.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/octet-stream")
+        );
     }
 
     public long ContentLength { get; private set; } = -1;
@@ -32,27 +35,45 @@ public class HttpZipStream : IDisposable
     /// <summary>
     /// Manually setting the content length is only recommended if you truly know what your doing. This may increase loading time but could also invalidate the requests.
     /// </summary>
-    public void SetContentLength(long value) { ContentLength = value; }
+    public void SetContentLength(long value)
+    {
+        ContentLength = value;
+    }
 
     public async ValueTask<long> GetContentLengthAsync()
     {
         try
         {
-            if (ContentLength != -1) { return ContentLength; }
-            using (var httpMessage = await httpClient.GetAsync(httpUrl, HttpCompletionOption.ResponseHeadersRead))
+            if (ContentLength != -1)
             {
-                if (!httpMessage.IsSuccessStatusCode) { return -1; }
+                return ContentLength;
+            }
+            using (
+                var httpMessage = await httpClient.GetAsync(
+                    httpUrl,
+                    HttpCompletionOption.ResponseHeadersRead
+                )
+            )
+            {
+                if (!httpMessage.IsSuccessStatusCode)
+                {
+                    return -1;
+                }
                 ContentLength = httpMessage.Content.Headers
-                   .GetValues("Content-Length")
-                   .Select(x => long.Parse(x))
-                   .FirstOrDefault();
+                    .GetValues("Content-Length")
+                    .Select(x => long.Parse(x))
+                    .FirstOrDefault();
                 return ContentLength;
             }
         }
-        catch (Exception) { throw; }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     HttpZipDirectory? directoryData { get; set; }
+
     private async ValueTask<bool> LocateDirectoryAsync()
     {
         try
@@ -70,7 +91,10 @@ public class HttpZipStream : IDisposable
             {
                 // MAKE A HTTP CALL USING THE RANGE HEADER
                 rangeStart -= (chunkSize * tries);
-                httpClient.DefaultRequestHeaders.Range = new RangeHeaderValue(rangeStart, rangeFinish);
+                httpClient.DefaultRequestHeaders.Range = new RangeHeaderValue(
+                    rangeStart,
+                    rangeFinish
+                );
                 var byteArray = await httpClient.GetByteArrayAsync(httpUrl);
 
                 // TRY TO LOCATE THE END OF CENTRAL DIRECTORY DEFINED BY
@@ -79,18 +103,23 @@ public class HttpZipStream : IDisposable
                 var pos = (byteArray.Length - secureMargin);
                 while (pos >= 0)
                 {
-                    // FOUND CENTRAL DIRECTORY 
-                    if (byteArray[pos + 0] == 0x50 &&
-                        byteArray[pos + 1] == 0x4b &&
-                        byteArray[pos + 2] == 0x05 &&
-                        byteArray[pos + 3] == 0x06)
+                    // FOUND CENTRAL DIRECTORY
+                    if (
+                        byteArray[pos + 0] == 0x50
+                        && byteArray[pos + 1] == 0x4b
+                        && byteArray[pos + 2] == 0x05
+                        && byteArray[pos + 3] == 0x06
+                    )
                     {
                         directoryData.Size = BitConverter.ToInt32(byteArray, pos + 12);
                         directoryData.Offset = BitConverter.ToInt32(byteArray, pos + 16);
                         directoryData.Entries = BitConverter.ToInt16(byteArray, pos + 10);
                         return true;
                     }
-                    else { pos--; }
+                    else
+                    {
+                        pos--;
+                    }
                 }
 
                 tries++;
@@ -135,7 +164,10 @@ public class HttpZipStream : IDisposable
 
                 entry.Signature = BitConverter.ToInt32(byteArray, entriesOffset + 0); // 0x04034b50
                 entry.VersionMadeBy = BitConverter.ToInt16(byteArray, entriesOffset + 4);
-                entry.MinimumVersionNeededToExtract = BitConverter.ToInt16(byteArray, entriesOffset + 6);
+                entry.MinimumVersionNeededToExtract = BitConverter.ToInt16(
+                    byteArray,
+                    entriesOffset + 6
+                );
                 entry.GeneralPurposeBitFlag = BitConverter.ToInt16(byteArray, entriesOffset + 8);
 
                 entry.CompressionMethod = BitConverter.ToInt16(byteArray, entriesOffset + 10);
@@ -148,7 +180,10 @@ public class HttpZipStream : IDisposable
                 entry.ExtraFieldLength = BitConverter.ToInt16(byteArray, entriesOffset + 30); // (m)
                 entry.FileCommentLength = BitConverter.ToInt16(byteArray, entriesOffset + 32); // (k)
 
-                entry.DiskNumberWhereFileStarts = BitConverter.ToInt16(byteArray, entriesOffset + 34);
+                entry.DiskNumberWhereFileStarts = BitConverter.ToInt16(
+                    byteArray,
+                    entriesOffset + 34
+                );
                 entry.InternalFileAttributes = BitConverter.ToInt16(byteArray, entriesOffset + 36);
                 entry.ExternalFileAttributes = BitConverter.ToInt32(byteArray, entriesOffset + 38);
                 entry.FileOffset = BitConverter.ToInt32(byteArray, entriesOffset + 42);
@@ -165,7 +200,13 @@ public class HttpZipStream : IDisposable
 
                 var fileCommentStart = extraFieldStart + entry.ExtraFieldLength;
                 var fileCommentBuffer = new byte[entry.FileCommentLength];
-                Array.Copy(byteArray, fileCommentStart, fileCommentBuffer, 0, entry.FileCommentLength);
+                Array.Copy(
+                    byteArray,
+                    fileCommentStart,
+                    fileCommentBuffer,
+                    0,
+                    entry.FileCommentLength
+                );
                 entry.FileComment = System.Text.Encoding.Default.GetString(fileCommentBuffer);
 
                 list.Add(entry);
@@ -182,14 +223,22 @@ public class HttpZipStream : IDisposable
     }
 
     [Obsolete]
-    public async ValueTask ExtractAsync(List<HttpZipEntry> entryList, Action<MemoryStream> resultCallback)
+    public async ValueTask ExtractAsync(
+        List<HttpZipEntry> entryList,
+        Action<MemoryStream> resultCallback
+    )
     {
         try
         {
             foreach (var entry in entryList)
-            { await ExtractAsync(entry, resultCallback); }
+            {
+                await ExtractAsync(entry, resultCallback);
+            }
         }
-        catch (Exception) { throw; }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async ValueTask ExtractAsync(HttpZipEntry entry, Action<MemoryStream> resultCallback)
@@ -202,7 +251,10 @@ public class HttpZipStream : IDisposable
             resultCallback.Invoke(resultStream);
             return;
         }
-        catch (Exception) { throw; }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async ValueTask<byte[]> ExtractAsync(HttpZipEntry entry)
@@ -237,7 +289,9 @@ public class HttpZipStream : IDisposable
 
             /* STORED */
             if (entry.CompressionMethod == 0)
-            { return fileDataBuffer; }
+            {
+                return fileDataBuffer;
+            }
 
             /* DEFLATED */
             if (entry.CompressionMethod == 8)
@@ -245,7 +299,12 @@ public class HttpZipStream : IDisposable
                 var deflatedArray = new byte[entry.UncompressedSize];
                 using (var compressedStream = new MemoryStream(fileDataBuffer))
                 {
-                    using (var deflateStream = new System.IO.Compression.DeflateStream(compressedStream, CompressionMode.Decompress))
+                    using (
+                        var deflateStream = new System.IO.Compression.DeflateStream(
+                            compressedStream,
+                            CompressionMode.Decompress
+                        )
+                    )
                     {
                         await deflateStream.ReadAsync(deflatedArray, 0, deflatedArray.Length);
                     }
@@ -253,7 +312,7 @@ public class HttpZipStream : IDisposable
                     /*
                     using (var deflatedStream = new MemoryStream())
                     {
-                       var deflater = new System.IO.Compression.DeflateStream(compressedStream, CompressionMode.Decompress, true);                     
+                       var deflater = new System.IO.Compression.DeflateStream(compressedStream, CompressionMode.Decompress, true);
                        byte[] buffer = new byte[1024];
                        var bytesPending = entry.UncompressedSize;
                        while (bytesPending > 0)
@@ -262,19 +321,23 @@ public class HttpZipStream : IDisposable
                           deflatedStream.Write(buffer, 0, bytesRead);
                           bytesPending -= (uint)bytesRead;
                           if (bytesRead == 0) { break; }
-                       }                    
+                       }
                        deflatedArray = deflatedStream.ToArray();
                     }
                      */
-
                 }
                 return deflatedArray;
             }
 
             // NOT SUPPORTED COMPRESSION METHOD
-            throw new NotSupportedException($"The compression method [{entry.CompressionMethod}] is not supported");
+            throw new NotSupportedException(
+                $"The compression method [{entry.CompressionMethod}] is not supported"
+            );
         }
-        catch (Exception) { throw; }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public void Dispose()

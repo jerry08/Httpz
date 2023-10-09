@@ -20,6 +20,5 @@ public sealed class PlaylistToken
 
     public string? Content { get; }
 
-    public override string ToString()
-        => $"{Type}('{Content}')";
+    public override string ToString() => $"{Type}('{Content}')";
 }

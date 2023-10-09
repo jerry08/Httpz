@@ -14,9 +14,7 @@ public static class DomainDataStructureExtensions
     /// </summary>
     /// <param name="structure">The structure to appened the rule.</param>
     /// <param name="tldRules">The rules to append.</param>
-    public static void AddRules(
-        this DomainDataStructure structure,
-        IEnumerable<TldRule> tldRules)
+    public static void AddRules(this DomainDataStructure structure, IEnumerable<TldRule> tldRules)
     {
         foreach (var tldRule in tldRules)
         {

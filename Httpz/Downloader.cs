@@ -33,9 +33,8 @@ public class Downloader : IDownloader
     /// <summary>
     /// Initializes an instance of <see cref="Downloader" />.
     /// </summary>
-    public Downloader() : this(new HttpClientFactory())
-    {
-    }
+    public Downloader()
+        : this(new HttpClientFactory()) { }
 
     public async ValueTask DownloadAsync(
         string url,
@@ -43,8 +42,8 @@ public class Downloader : IDownloader
         Dictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
-        CancellationToken cancellationToken = default)
-        => await DownloadAsync(new Uri(url), filePath, headers, progress, append, cancellationToken);
+        CancellationToken cancellationToken = default
+    ) => await DownloadAsync(new Uri(url), filePath, headers, progress, append, cancellationToken);
 
     public async ValueTask DownloadAsync(
         Uri url,
@@ -52,7 +51,8 @@ public class Downloader : IDownloader
         Dictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var http = _httpClientFactory.CreateClient();
 
@@ -74,11 +74,11 @@ public class Downloader : IDownloader
         if (!response.IsSuccessStatusCode)
         {
             throw new HttpRequestException(
-                $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode})." +
-                Environment.NewLine +
-                "Request:" +
-                Environment.NewLine +
-                request
+                $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode})."
+                    + Environment.NewLine
+                    + "Request:"
+                    + Environment.NewLine
+                    + request
             );
         }
 

@@ -20,9 +20,8 @@ public class DomainParser : IDomainParser
     /// </summary>
     /// <param name="rules">The list of rules.</param>
     /// <param name="domainNormalizer">An <see cref="IDomainNormalizer"/>.</param>
-    public DomainParser(
-        IEnumerable<TldRule> rules,
-        IDomainNormalizer? domainNormalizer = null) : this(domainNormalizer)
+    public DomainParser(IEnumerable<TldRule> rules, IDomainNormalizer? domainNormalizer = null)
+        : this(domainNormalizer)
     {
         if (rules is null)
         {
@@ -51,7 +50,9 @@ public class DomainParser : IDomainParser
     /// <param name="domainNormalizer">An <see cref="IDomainNormalizer"/>.</param>
     public DomainParser(
         DomainDataStructure initializedDataStructure,
-        IDomainNormalizer? domainNormalizer = null) : this(domainNormalizer)
+        IDomainNormalizer? domainNormalizer = null
+    )
+        : this(domainNormalizer)
     {
         _domainDataStructure = initializedDataStructure;
     }
@@ -77,12 +78,12 @@ public class DomainParser : IDomainParser
     public DomainInfo Parse(Uri domain)
     {
         var partlyNormalizedDomain = domain.Host;
-        var normalizedHost = domain.GetComponents(UriComponents.NormalizedHost, UriFormat.UriEscaped); //Normalize punycode
+        var normalizedHost = domain.GetComponents(
+            UriComponents.NormalizedHost,
+            UriFormat.UriEscaped
+        ); //Normalize punycode
 
-        var parts = normalizedHost
-            .Split('.')
-            .Reverse()
-            .ToList();
+        var parts = normalizedHost.Split('.').Reverse().ToList();
 
         return GetDomainFromParts(partlyNormalizedDomain, parts);
     }
@@ -90,7 +91,10 @@ public class DomainParser : IDomainParser
     ///<inheritdoc/>
     public DomainInfo Parse(string domain)
     {
-        var parts = _domainNormalizer.PartlyNormalizeDomainAndExtractFullyNormalizedParts(domain, out var partlyNormalizedDomain);
+        var parts = _domainNormalizer.PartlyNormalizeDomainAndExtractFullyNormalizedParts(
+            domain,
+            out var partlyNormalizedDomain
+        );
         return GetDomainFromParts(partlyNormalizedDomain, parts);
     }
 
@@ -114,7 +118,10 @@ public class DomainParser : IDomainParser
 
         try
         {
-            var parts = _domainNormalizer.PartlyNormalizeDomainAndExtractFullyNormalizedParts(domain, out var partlyNormalizedDomain);
+            var parts = _domainNormalizer.PartlyNormalizeDomainAndExtractFullyNormalizedParts(
+                domain,
+                out var partlyNormalizedDomain
+            );
 
             var domainName = GetDomainFromParts(partlyNormalizedDomain, parts);
             if (domainName is null)
@@ -143,8 +150,9 @@ public class DomainParser : IDomainParser
         var matches = new List<TldRule>();
         FindMatches(parts, structure!, matches);
 
-        //Sort so exceptions are first, then by biggest label count (with wildcards at bottom) 
-        var sortedMatches = matches.OrderByDescending(x => x.Type == TldRuleType.WildcardException ? 1 : 0)
+        //Sort so exceptions are first, then by biggest label count (with wildcards at bottom)
+        var sortedMatches = matches
+            .OrderByDescending(x => x.Type == TldRuleType.WildcardException ? 1 : 0)
             .ThenByDescending(x => x.LabelCount)
             .ThenByDescending(x => x.Name);
 
@@ -159,11 +167,17 @@ public class DomainParser : IDomainParser
             if (winningRule.Type == TldRuleType.Wildcard)
             {
                 if (tld.EndsWith(winningRule.Name.Substring(1)))
-                    throw new DomainParseException("Domain is a TLD according publicsuffix", winningRule);
+                    throw new DomainParseException(
+                        "Domain is a TLD according publicsuffix",
+                        winningRule
+                    );
             }
             else if (tld.Equals(winningRule.Name))
             {
-                throw new DomainParseException("Domain is a TLD according publicsuffix", winningRule);
+                throw new DomainParseException(
+                    "Domain is a TLD according publicsuffix",
+                    winningRule
+                );
             }
 
             throw new DomainParseException($"Unknown domain {domain}");
@@ -175,7 +189,8 @@ public class DomainParser : IDomainParser
     private void FindMatches(
         IEnumerable<string> parts,
         DomainDataStructure structure,
-        List<TldRule> matches)
+        List<TldRule> matches
+    )
     {
         if (structure.TldRule is not null)
             matches.Add(structure.TldRule);

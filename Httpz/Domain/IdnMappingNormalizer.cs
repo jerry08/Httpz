@@ -13,7 +13,8 @@ public class IdnMappingNormalizer : IDomainNormalizer
 
     public List<string> PartlyNormalizeDomainAndExtractFullyNormalizedParts(
         string domain,
-        out string partlyNormalizedDomain)
+        out string partlyNormalizedDomain
+    )
     {
         partlyNormalizedDomain = string.Empty;
 
@@ -30,9 +31,6 @@ public class IdnMappingNormalizer : IDomainNormalizer
             punycodeConvertedDomain = _idnMapping.GetUnicode(partlyNormalizedDomain);
         }
 
-        return punycodeConvertedDomain
-            .Split('.')
-            .Reverse()
-            .ToList();
+        return punycodeConvertedDomain.Split('.').Reverse().ToList();
     }
 }

@@ -62,13 +62,13 @@ public static class Http
                     break;
             }
 
-            otherParams = ".NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E";
+            otherParams =
+                ".NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E";
         }
 
         #endregion
 
-        return
-            $"Mozilla/{mozillaVersion} (compatible; MSIE {version}; {windowsVersion}; Trident/{trident}; {otherParams})";
+        return $"Mozilla/{mozillaVersion} (compatible; MSIE {version}; {windowsVersion}; Trident/{trident}; {otherParams})";
     }
 
     /// <summary>
@@ -124,8 +124,8 @@ public static class Http
         var build = random.Next(2100, 3538);
         var branchBuild = random.Next(170);
 
-        return $"Mozilla/5.0 ({RandomWindowsVersion()}) AppleWebKit/537.36 (KHTML, like Gecko) " +
-            $"Chrome/{major}.0.{build}.{branchBuild} Safari/537.36";
+        return $"Mozilla/5.0 ({RandomWindowsVersion()}) AppleWebKit/537.36 (KHTML, like Gecko) "
+            + $"Chrome/{major}.0.{build}.{branchBuild} Safari/537.36";
     }
 
     private static readonly byte[] FirefoxVersions = { 64, 63, 62, 60, 58, 52, 51, 46, 45 };
@@ -223,7 +223,8 @@ public static class Http
         object sender,
         X509Certificate certification,
         X509Chain chain,
-        SslPolicyErrors sslPolicyErrors) => true;
+        SslPolicyErrors sslPolicyErrors
+    ) => true;
 
     private static string RandomWindowsVersion()
     {
@@ -235,15 +236,12 @@ public static class Http
         // Windows 10 = 45% popularity
         if (val >= 1 && val <= 45)
             windowsVersion += "10.0";
-
         // Windows 7 = 35% popularity
         else if (val > 45 && val <= 80)
             windowsVersion += "6.1";
-
         // Windows 8.1 = 15% popularity
         else if (val > 80 && val <= 95)
             windowsVersion += "6.3";
-
         // Windows 8 = 5% popularity
         else
             windowsVersion += "6.2";

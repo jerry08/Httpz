@@ -5,9 +5,7 @@
 /// </summary>
 public class RectSize
 {
-    public RectSize()
-    {
-    }
+    public RectSize() { }
 
     public RectSize(int width, int height)
     {

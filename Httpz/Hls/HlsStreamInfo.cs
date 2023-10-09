@@ -14,12 +14,7 @@ public class HlsStreamInfo
 
     public Uri Uri { get; }
 
-    public HlsStreamInfo(
-        Uri uri,
-        int programId,
-        int bandwidth,
-        RectSize? resolution,
-        string? name)
+    public HlsStreamInfo(Uri uri, int programId, int bandwidth, RectSize? resolution, string? name)
     {
         ProgramId = programId;
         Bandwidth = bandwidth;

@@ -9,7 +9,8 @@ public class UriNormalizer : IDomainNormalizer
 {
     public List<string> PartlyNormalizeDomainAndExtractFullyNormalizedParts(
         string domain,
-        out string partlyNormalizedDomain)
+        out string partlyNormalizedDomain
+    )
     {
         partlyNormalizedDomain = string.Empty;
 
@@ -32,9 +33,6 @@ public class UriNormalizer : IDomainNormalizer
         partlyNormalizedDomain = uri.Host;
         var normalizedHost = uri.GetComponents(UriComponents.NormalizedHost, UriFormat.UriEscaped); //Normalize punycode
 
-        return normalizedHost
-            .Split('.')
-            .Reverse()
-            .ToList();
+        return normalizedHost.Split('.').Reverse().ToList();
     }
 }

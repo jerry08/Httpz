@@ -20,34 +20,32 @@ public class HlsDownloader : Downloader
     /// <summary>
     /// Initializes an instance of <see cref="HlsDownloader" />.
     /// </summary>
-    public HlsDownloader(IHttpClientFactory httpClientFactory) : base(httpClientFactory)
-    {
-    }
+    public HlsDownloader(IHttpClientFactory httpClientFactory)
+        : base(httpClientFactory) { }
 
     /// <summary>
     /// Initializes an instance of <see cref="HlsDownloader" />.
     /// </summary>
-    public HlsDownloader(Func<HttpClient> httpClientFunc) : base(httpClientFunc)
-    {
-    }
+    public HlsDownloader(Func<HttpClient> httpClientFunc)
+        : base(httpClientFunc) { }
 
     /// <summary>
     /// Initializes an instance of <see cref="HlsDownloader" />.
     /// </summary>
-    public HlsDownloader() : this(new HttpClientFactory())
-    {
-    }
+    public HlsDownloader()
+        : this(new HttpClientFactory()) { }
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         string url,
         Dictionary<string, string>? headers = null,
-        CancellationToken cancellationToken = default)
-        => await GetQualitiesAsync(new Uri(url), headers, cancellationToken);
+        CancellationToken cancellationToken = default
+    ) => await GetQualitiesAsync(new Uri(url), headers, cancellationToken);
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         Uri uri,
         Dictionary<string, string>? headers = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var http = _httpClientFactory.CreateClient();
 
@@ -58,11 +56,7 @@ public class HlsDownloader : Downloader
 
         for (var i = 0; i < grabResult.Count; i++)
         {
-            stream = await http.ExecuteAsync(
-                grabResult[i].ResourceUri,
-                headers,
-                cancellationToken
-            );
+            stream = await http.ExecuteAsync(grabResult[i].ResourceUri, headers, cancellationToken);
 
             doc = await GetPlaylistDocumentAsync(stream, grabResult[i].ResourceUri);
 
@@ -77,7 +71,8 @@ public class HlsDownloader : Downloader
     private async ValueTask<PlaylistDocument> GetPlaylistDocumentAsync(
         //Stream stream,
         string stream,
-        Uri uri)
+        Uri uri
+    )
     {
         var doc = new PlaylistDocument();
 
@@ -103,7 +98,8 @@ public class HlsDownloader : Downloader
         string filePath,
         Dictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         for (var i = 0; i < stream.Segments.Count; i++)
         {
@@ -131,7 +127,8 @@ public class HlsDownloader : Downloader
         string filePath,
         IProgress<double>? progress = null,
         int maxParallelDownloads = 10,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         var tempFiles = new List<string>();
 
@@ -144,39 +141,53 @@ public class HlsDownloader : Downloader
 
             var total = 0;
 
-            var tasks = Enumerable.Range(0, stream.Segments.Count).Select(i =>
-                Task.Run(async () =>
-                {
-                    using var access = await downloadSemaphore.AcquireAsync(cancellationToken);
+            var tasks = Enumerable
+                .Range(0, stream.Segments.Count)
+                .Select(
+                    i =>
+                        Task.Run(async () =>
+                        {
+                            using var access = await downloadSemaphore.AcquireAsync(
+                                cancellationToken
+                            );
 
-                    var segment = stream.Segments[i];
+                            var segment = stream.Segments[i];
 
-                    var outputPath = Path.Combine(
-                        Path.GetTempPath(),
-                        DateTime.Now.Ticks.ToString()) + $"_{i}.tmp";
+                            var outputPath =
+                                Path.Combine(Path.GetTempPath(), DateTime.Now.Ticks.ToString())
+                                + $"_{i}.tmp";
 
-                    tempFiles.Add(outputPath);
+                            tempFiles.Add(outputPath);
 
-                    await DownloadAsync(
-                        segment.Uri.AbsoluteUri,
-                        outputPath,
-                        headers,
-                        null,
-                        false,
-                        cancellationToken
-                    );
+                            await DownloadAsync(
+                                segment.Uri.AbsoluteUri,
+                                outputPath,
+                                headers,
+                                null,
+                                false,
+                                cancellationToken
+                            );
 
-                    total++;
+                            total++;
 
-                    progress?.Report((total / (double)stream.Segments.Count * 100.0) / 100.0);
-                }));
+                            progress?.Report(
+                                (total / (double)stream.Segments.Count * 100.0) / 100.0
+                            );
+                        })
+                );
 
             await Task.WhenAll(tasks);
 
             progress?.Report(1);
 
-            tempFiles = tempFiles.OrderBy(x => Convert.ToInt32(Path.GetFileNameWithoutExtension(x)
-                .Split('_').LastOrDefault())).ToList();
+            tempFiles = tempFiles
+                .OrderBy(
+                    x =>
+                        Convert.ToInt32(
+                            Path.GetFileNameWithoutExtension(x).Split('_').LastOrDefault()
+                        )
+                )
+                .ToList();
 
             await FileEx.CombineMultipleFilesIntoSingleFile(tempFiles, filePath);
         }
@@ -190,12 +201,10 @@ public class HlsDownloader : Downloader
         }
     }
 
-    public bool Supports(Uri uri)
-        => uri.AbsolutePath.EndsWith(".m3u8", StringComparison.InvariantCultureIgnoreCase);
+    public bool Supports(Uri uri) =>
+        uri.AbsolutePath.EndsWith(".m3u8", StringComparison.InvariantCultureIgnoreCase);
 
-    private IList<HlsStreamMetadata> GetStreams(
-        Uri originalUri,
-        PlaylistDocument doc)
+    private IList<HlsStreamMetadata> GetStreams(Uri originalUri, PlaylistDocument doc)
     {
         var list = new List<HlsStreamMetadata>();
 
@@ -210,7 +219,8 @@ public class HlsDownloader : Downloader
                 stream.Bandwidth,
                 PlaylistFormat,
                 OutputFormat,
-                null);
+                null
+            );
 
             list.Add(streamMetadata);
         }
@@ -218,9 +228,7 @@ public class HlsDownloader : Downloader
         return list.OrderByDescending(s => s.Resolution?.Height).ToList();
     }
 
-    private IList<HlsStreamMetadata> GetSegments(
-        Uri originalUri,
-        PlaylistDocument doc)
+    private IList<HlsStreamMetadata> GetSegments(Uri originalUri, PlaylistDocument doc)
     {
         var list = new List<HlsStreamMetadata>();
         var segments = new List<MediaSegment>();
@@ -241,14 +249,16 @@ public class HlsDownloader : Downloader
             Segments = segments,
         };
 
-        list.Add(new HlsStreamMetadata(
-            originalUri,
-            "Media",
-            null,
-            0,
-            PlaylistFormat,
-            OutputFormat,
-            hlsStream)
+        list.Add(
+            new HlsStreamMetadata(
+                originalUri,
+                "Media",
+                null,
+                0,
+                PlaylistFormat,
+                OutputFormat,
+                hlsStream
+            )
         );
 
         return list;

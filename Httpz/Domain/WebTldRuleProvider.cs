@@ -16,7 +16,10 @@ public class WebTldRuleProvider : ITldRuleProvider
     /// <summary>
     /// Returns the cache provider
     /// </summary>
-    public ICacheProvider CacheProvider { get { return _cacheProvider; } }
+    public ICacheProvider CacheProvider
+    {
+        get { return _cacheProvider; }
+    }
 
     /// <summary>
     /// WebTldRuleProvider<br/>
@@ -26,7 +29,8 @@ public class WebTldRuleProvider : ITldRuleProvider
     /// <param name="cacheProvider">default is <see cref="FileCacheProvider"/></param>
     public WebTldRuleProvider(
         string url = "https://publicsuffix.org/list/public_suffix_list.dat",
-        ICacheProvider? cacheProvider = null)
+        ICacheProvider? cacheProvider = null
+    )
     {
         _fileUrl = url;
 

@@ -7,10 +7,7 @@ namespace Httpz.Hls;
 
 public class PlaylistTagValue
 {
-    public PlaylistTagValue(
-        string key,
-        string? wholeValue,
-        IDictionary<string, string?>? values)
+    public PlaylistTagValue(string key, string? wholeValue, IDictionary<string, string?>? values)
     {
         Key = key;
         WholeValue = wholeValue;
@@ -29,7 +26,8 @@ public class PlaylistTagValue
         return new PlaylistTagValue(key, val, ParseValues(val));
     }
 
-    private static readonly Regex _valueRegex = new(@"(^|,?)([\w\-]+)=(""([^""]+)""|([^,]+))", RegexOptions.Compiled);
+    private static readonly Regex _valueRegex =
+        new(@"(^|,?)([\w\-]+)=(""([^""]+)""|([^,]+))", RegexOptions.Compiled);
 
     private static IDictionary<string, string?>? ParseValues(string? content)
     {

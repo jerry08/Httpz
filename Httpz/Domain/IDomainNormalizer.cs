@@ -6,5 +6,6 @@ public interface IDomainNormalizer
 {
     List<string> PartlyNormalizeDomainAndExtractFullyNormalizedParts(
         string domain,
-        out string partlyNormalizedDomain);
+        out string partlyNormalizedDomain
+    );
 }

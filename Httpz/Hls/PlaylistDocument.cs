@@ -16,8 +16,8 @@ public class PlaylistDocument
 {
     private static readonly Regex _resolutionRegex = new(@"^(\d+)\D+(\d+)$", RegexOptions.Compiled);
 
-    private readonly Dictionary<string, Action<PlaylistTagValue, LoadContext>> _tagParsers
-        = new(StringComparer.InvariantCultureIgnoreCase);
+    private readonly Dictionary<string, Action<PlaylistTagValue, LoadContext>> _tagParsers =
+        new(StringComparer.InvariantCultureIgnoreCase);
     private readonly List<HlsMediaSegment> _segments = new();
     private readonly List<HlsStreamInfo> _streams = new();
 
@@ -104,10 +104,7 @@ public class PlaylistDocument
         if (token is null || token.Type != PlaylistTokenType.Header)
             throw new PlaylistDocumentLoadException();
 
-        var context = new LoadContext
-        {
-            BaseUri = originalUri,
-        };
+        var context = new LoadContext { BaseUri = originalUri, };
 
         while (!tokenizer.EndOfStream)
         {
@@ -134,7 +131,9 @@ public class PlaylistDocument
                     break;
 
                 default:
-                    throw new NotImplementedException($"Playlist token type of '{token.Type}' is not implemented.");
+                    throw new NotImplementedException(
+                        $"Playlist token type of '{token.Type}' is not implemented."
+                    );
             }
         }
     }
@@ -189,7 +188,10 @@ public class PlaylistDocument
             {
                 var match = _resolutionRegex.Match(sResolution);
                 if (match.Success)
-                    resolution = new RectSize(int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+                    resolution = new RectSize(
+                        int.Parse(match.Groups[1].Value),
+                        int.Parse(match.Groups[2].Value)
+                    );
             }
 
             _streams.Add(new HlsStreamInfo(uri, programId, bandwidth, resolution, name));
@@ -241,14 +243,20 @@ public class PlaylistDocument
             "AES-128" => HlsKeyMethod.Aes128,
             "SAMPLE-AES" => HlsKeyMethod.SampleAes,
             "NONE" => HlsKeyMethod.None,
-            _ => throw new NotSupportedException($"HLS encryption method '{sMethod}' is not supported."),
+            _
+                => throw new NotSupportedException(
+                    $"HLS encryption method '{sMethod}' is not supported."
+                ),
         };
 
         Uri? uri = null;
 
-        if ((!string.IsNullOrEmpty(sUri)
-            && !Uri.TryCreate(sUri, UriKind.RelativeOrAbsolute, out uri))
-            || uri is null)
+        if (
+            (
+                !string.IsNullOrEmpty(sUri)
+                && !Uri.TryCreate(sUri, UriKind.RelativeOrAbsolute, out uri)
+            ) || uri is null
+        )
         {
             throw new PlaylistDocumentLoadException($"Invalid URI format: {sUri}");
         }
@@ -256,8 +264,10 @@ public class PlaylistDocument
         if (!uri.IsAbsoluteUri)
             uri = new Uri(context.BaseUri!, uri);
 
-        if (!string.IsNullOrEmpty(sIV)
-            && sIV?.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) == true)
+        if (
+            !string.IsNullOrEmpty(sIV)
+            && sIV?.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase) == true
+        )
         {
             sIV = sIV.Substring(2);
         }
@@ -267,9 +277,10 @@ public class PlaylistDocument
         Key = new HlsKey(method, uri, iv);
     }
 
-    private static byte[] StringToByteArray(string hex)
-        => Enumerable.Range(0, hex.Length)
-        .Where(x => x % 2 == 0)
-        .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-        .ToArray();
+    private static byte[] StringToByteArray(string hex) =>
+        Enumerable
+            .Range(0, hex.Length)
+            .Where(x => x % 2 == 0)
+            .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
+            .ToArray();
 }

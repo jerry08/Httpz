@@ -12,9 +12,8 @@ internal class HttpClientFactory : IHttpClientFactory
         _httpClientFunc = httpClientFunc;
     }
 
-    public HttpClientFactory() : this(() => new())
-    {
-    }
+    public HttpClientFactory()
+        : this(() => new()) { }
 
     public HttpClient CreateClient() => _httpClientFunc();
 }

@@ -13,7 +13,8 @@ public interface IDownloader
         Dictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 
     ValueTask DownloadAsync(
         Uri url,
@@ -21,5 +22,6 @@ public interface IDownloader
         Dictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default
+    );
 }
