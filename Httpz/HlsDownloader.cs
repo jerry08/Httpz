@@ -189,7 +189,7 @@ public class HlsDownloader : Downloader
                 )
                 .ToList();
 
-            await FileEx.Combine(tempFiles, filePath);
+            await FileEx.CombineAsync(tempFiles, filePath, cancellationToken: cancellationToken);
         }
         finally
         {
