@@ -8,20 +8,7 @@ namespace Httpz.Utils;
 
 internal static class FileEx
 {
-    public static async ValueTask CombineMultipleFilesIntoSingleFile(
-        string inputDirectoryPath,
-        string inputFileNamePattern,
-        string outputFilePath
-    )
-    {
-        var inputFilePaths = Directory.GetFiles(inputDirectoryPath, inputFileNamePattern);
-        await CombineMultipleFilesIntoSingleFile(inputFilePaths, outputFilePath);
-    }
-
-    public static async ValueTask CombineMultipleFilesIntoSingleFile(
-        IEnumerable<string> inputFilePaths,
-        string outputFilePath
-    )
+    public static async ValueTask Combine(IEnumerable<string> inputFilePaths, string outputFilePath)
     {
         Debug.WriteLine($"Number of files: {inputFilePaths.Count()}.");
         using var outputStream = File.Create(outputFilePath);
