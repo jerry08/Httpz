@@ -37,13 +37,13 @@ public class HlsDownloader : Downloader
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         string url,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default
     ) => await GetQualitiesAsync(new Uri(url), headers, cancellationToken);
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         Uri uri,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default
     )
     {
@@ -96,7 +96,7 @@ public class HlsDownloader : Downloader
     public async ValueTask DownloadAsync(
         HlsStream stream,
         string filePath,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default
     )
@@ -119,11 +119,11 @@ public class HlsDownloader : Downloader
     }
 
     /// <summary>
-    /// Downloads a hls/m3u8 video from a url.
+    /// Downloads an hls/m3u8 video from a url.
     /// </summary>
     public async ValueTask DownloadAllThenMergeAsync(
         HlsStream stream,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         string filePath,
         IProgress<double>? progress = null,
         int maxParallelDownloads = 10,
@@ -183,13 +183,13 @@ public class HlsDownloader : Downloader
             tempFiles = tempFiles
                 .OrderBy(
                     x =>
-                        Convert.ToInt32(
+                        Convert.ToInt64(
                             Path.GetFileNameWithoutExtension(x).Split('_').LastOrDefault()
                         )
                 )
                 .ToList();
 
-            await FileEx.CombineMultipleFilesIntoSingleFile(tempFiles, filePath);
+            await FileEx.Combine(tempFiles, filePath);
         }
         finally
         {

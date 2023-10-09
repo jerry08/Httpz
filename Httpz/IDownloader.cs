@@ -10,7 +10,7 @@ public interface IDownloader
     ValueTask DownloadAsync(
         string url,
         string filePath,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
         CancellationToken cancellationToken = default
@@ -19,7 +19,7 @@ public interface IDownloader
     ValueTask DownloadAsync(
         Uri url,
         string filePath,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         IProgress<double>? progress = null,
         bool append = false,
         CancellationToken cancellationToken = default

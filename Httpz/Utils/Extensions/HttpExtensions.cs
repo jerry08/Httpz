@@ -48,14 +48,14 @@ public static class HttpExtensions
     public static async ValueTask<HttpResponseMessage> HeadAsync(
         this HttpClient http,
         string requestUri,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         CancellationToken cancellationToken = default
     ) => await http.HeadAsync(new Uri(requestUri), headers, cancellationToken);
 
     public static async ValueTask<HttpResponseMessage> HeadAsync(
         this HttpClient http,
         Uri requestUri,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         CancellationToken cancellationToken = default
     )
     {
@@ -214,14 +214,14 @@ public static class HttpExtensions
     public static async ValueTask<string> PostAsync(
         this HttpClient http,
         string url,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         CancellationToken cancellationToken = default
     ) => await http.PostAsync(new Uri(url), headers, cancellationToken);
 
     public static async ValueTask<string> PostAsync(
         this HttpClient http,
         Uri uri,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         CancellationToken cancellationToken = default
     )
     {
@@ -240,7 +240,7 @@ public static class HttpExtensions
     public static async ValueTask<string> PostAsync(
         this HttpClient http,
         string url,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         HttpContent content,
         CancellationToken cancellationToken = default
     ) => await http.PostAsync(new Uri(url), headers, content, cancellationToken);
@@ -248,7 +248,7 @@ public static class HttpExtensions
     public static async ValueTask<string> PostAsync(
         this HttpClient http,
         Uri uri,
-        Dictionary<string, string> headers,
+        IDictionary<string, string> headers,
         HttpContent content,
         CancellationToken cancellationToken = default
     )
@@ -270,14 +270,14 @@ public static class HttpExtensions
     public static async ValueTask<long> GetFileSizeAsync(
         this HttpClient http,
         string url,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default
     ) => await http.GetFileSizeAsync(new Uri(url), headers, cancellationToken);
 
     public static async ValueTask<long> GetFileSizeAsync(
         this HttpClient http,
         Uri uri,
-        Dictionary<string, string>? headers = null,
+        IDictionary<string, string>? headers = null,
         CancellationToken cancellationToken = default
     )
     {
@@ -329,14 +329,14 @@ public static class HttpExtensions
     public static async ValueTask<string> ExecuteAsync(
         this HttpClient http,
         string url,
-        Dictionary<string, string>? headers,
+        IDictionary<string, string>? headers,
         CancellationToken cancellationToken = default
     ) => await http.ExecuteAsync(new Uri(url), headers, cancellationToken);
 
     public static async ValueTask<string> ExecuteAsync(
         this HttpClient http,
         Uri uri,
-        Dictionary<string, string>? headers,
+        IDictionary<string, string>? headers,
         CancellationToken cancellationToken = default
     )
     {
