@@ -25,9 +25,10 @@ public class HttpZipStream : IDisposable
     {
         httpUrl = url;
         this.httpClient = httpClient;
-        this.httpClient.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/octet-stream")
-        );
+        this.httpClient
+            .DefaultRequestHeaders
+            .Accept
+            .Add(new MediaTypeWithQualityHeaderValue("application/octet-stream"));
     }
 
     public long ContentLength { get; private set; } = -1;
@@ -59,7 +60,9 @@ public class HttpZipStream : IDisposable
                 {
                     return -1;
                 }
-                ContentLength = httpMessage.Content.Headers
+                ContentLength = httpMessage
+                    .Content
+                    .Headers
                     .GetValues("Content-Length")
                     .Select(x => long.Parse(x))
                     .FirstOrDefault();

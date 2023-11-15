@@ -59,10 +59,9 @@ public class Downloader : IDownloader
         var request = new HttpRequestMessage(HttpMethod.Get, url);
         for (var j = 0; j < headers?.Count; j++)
         {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(j).Key,
-                headers.ElementAt(j).Value
-            );
+            request
+                .Headers
+                .TryAddWithoutValidation(headers.ElementAt(j).Key, headers.ElementAt(j).Value);
         }
 
         var response = await http.SendAsync(

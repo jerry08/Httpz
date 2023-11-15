@@ -60,7 +60,8 @@ public class DomainInfo
             return;
 
         var domainParts = domain.Split('.').Reverse().ToList();
-        var ruleParts = tldRule.Name
+        var ruleParts = tldRule
+            .Name
             .Split('.')
             .Skip(tldRule.Type == TldRuleType.WildcardException ? 1 : 0)
             .Reverse()
