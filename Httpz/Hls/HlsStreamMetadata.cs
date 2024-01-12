@@ -3,7 +3,7 @@
 namespace Httpz.Hls;
 
 /// <summary>
-/// Implements <see cref="IGrabbed"/> to provide information about HLS master playlist streams. This class represents
+/// Provides information about HLS master playlist streams. This class represents
 /// a single stream, which refers to an M3U8 playlist containing the actual media files.
 /// </summary>
 public class HlsStreamMetadata
@@ -60,4 +60,6 @@ public class HlsStreamMetadata
     /// Resolves the stream associated with current metadata.
     /// </summary>
     public HlsStream? Stream { get; set; }
+
+    public override string? ToString() => $"Quality ({Resolution})";
 }
