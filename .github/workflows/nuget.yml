@@ -44,6 +44,7 @@ jobs:
           -p:ContinuousIntegrationBuild=true
           -c Release
           /p:Version=${{ steps.get_version.outputs.version-without-v }}
+          /p:CSharpier_Bypass=true
       
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
