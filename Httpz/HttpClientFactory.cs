@@ -3,17 +3,10 @@ using System.Net.Http;
 
 namespace Httpz;
 
-internal class HttpClientFactory : IHttpClientFactory
+internal class HttpClientFactory(Func<HttpClient> httpClientFunc) : IHttpClientFactory
 {
-    private readonly Func<HttpClient> _httpClientFunc;
-
-    public HttpClientFactory(Func<HttpClient> httpClientFunc)
-    {
-        _httpClientFunc = httpClientFunc;
-    }
-
     public HttpClientFactory()
         : this(() => new()) { }
 
-    public HttpClient CreateClient() => _httpClientFunc();
+    public HttpClient CreateClient() => httpClientFunc();
 }

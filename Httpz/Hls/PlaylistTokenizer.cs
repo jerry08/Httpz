@@ -8,30 +8,24 @@ namespace Httpz.Hls;
 /// <summary>
 /// Tokenizer for M3U8 files
 /// </summary>
-public class PlaylistTokenizer : IDisposable
+public class PlaylistTokenizer(StreamReader reader) : IDisposable
 {
     private const string M3UHeader = "#EXTM3U";
     private const string TagMark = "#EXT";
 
     private readonly object _internalLock = new();
-    private readonly StreamReader _reader;
 
     public bool IsDisposed { get; private set; }
 
     /// <summary>
     /// Whether or not the stream has reached its end
     /// </summary>
-    public bool EndOfStream => _reader.EndOfStream;
+    public bool EndOfStream => reader.EndOfStream;
 
     /// <summary>
     /// The <see cref="StringComparison"/> used by the tokenizer
     /// </summary>
     public StringComparison Comparison { get; set; } = StringComparison.InvariantCulture;
-
-    public PlaylistTokenizer(StreamReader reader)
-    {
-        _reader = reader;
-    }
 
     public PlaylistTokenizer(Stream stream, bool ownStream = true)
         : this(new StreamReader(stream, Encoding.UTF8, false, 1024, !ownStream)) { }
@@ -42,9 +36,9 @@ public class PlaylistTokenizer : IDisposable
     /// <returns>The read token, or NULL if the input stream has reached its end.</returns>
     public PlaylistToken? Read()
     {
-        while (!_reader.EndOfStream)
+        while (!reader.EndOfStream)
         {
-            var content = _reader.ReadLine();
+            var content = reader.ReadLine();
             var token = ParseToken(content);
             if (token is not null)
                 return token;
@@ -59,9 +53,9 @@ public class PlaylistTokenizer : IDisposable
     /// <returns>The read token, or NULL if the input stream has reached its end.</returns>
     public async ValueTask<PlaylistToken?> ReadAsync()
     {
-        while (!_reader.EndOfStream)
+        while (!reader.EndOfStream)
         {
-            var content = await _reader.ReadLineAsync();
+            var content = await reader.ReadLineAsync();
             var token = ParseToken(content);
             if (token is not null)
                 return token;
@@ -108,6 +102,6 @@ public class PlaylistTokenizer : IDisposable
             IsDisposed = true;
         }
 
-        _reader.Dispose();
+        reader.Dispose();
     }
 }

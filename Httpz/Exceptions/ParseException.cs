@@ -6,28 +6,22 @@ namespace Httpz.Exceptions;
 /// <summary>
 /// Parse Exception
 /// </summary>
-public class DomainParseException : Exception
+/// <remarks>
+/// Parse Exception
+/// </remarks>
+/// <param name="errorMessage"></param>
+/// <param name="winningRule"></param>
+public class DomainParseException(string errorMessage, TldRule? winningRule = null) : Exception
 {
     /// <summary>
     /// Reason of exception
     /// </summary>
-    public TldRule? WinningRule { get; }
+    public TldRule? WinningRule { get; } = winningRule;
 
     /// <summary>
     /// Reason of exception
     /// </summary>
-    public string ErrorMessage { get; }
-
-    /// <summary>
-    /// Parse Exception
-    /// </summary>
-    /// <param name="errorMessage"></param>
-    /// <param name="winningRule"></param>
-    public DomainParseException(string errorMessage, TldRule? winningRule = null)
-    {
-        ErrorMessage = errorMessage;
-        WinningRule = winningRule;
-    }
+    public string ErrorMessage { get; } = errorMessage;
 
     /// <summary>
     /// Message

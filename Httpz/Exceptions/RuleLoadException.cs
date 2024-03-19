@@ -5,19 +5,14 @@ namespace Httpz.Exceptions;
 /// <summary>
 /// Rule Load Exception
 /// </summary>
-public class RuleLoadException : Exception
+/// <remarks>
+/// Rule Load Exception
+/// </remarks>
+/// <param name="error"></param>
+public class RuleLoadException(string error) : Exception
 {
     /// <summary>
     /// Error Message
     /// </summary>
-    public string Error { get; set; }
-
-    /// <summary>
-    /// Rule Load Exception
-    /// </summary>
-    /// <param name="error"></param>
-    public RuleLoadException(string error)
-    {
-        Error = error;
-    }
+    public string Error { get; set; } = error;
 }

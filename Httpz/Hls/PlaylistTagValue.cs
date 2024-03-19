@@ -5,18 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Httpz.Hls;
 
-public class PlaylistTagValue
+public class PlaylistTagValue(string key, string? wholeValue, IDictionary<string, string?>? values)
 {
-    public PlaylistTagValue(string key, string? wholeValue, IDictionary<string, string?>? values)
-    {
-        Key = key;
-        WholeValue = wholeValue;
-        Values = values;
-    }
-
-    public string Key { get; }
-    public string? WholeValue { get; }
-    public IDictionary<string, string?>? Values { get; }
+    public string Key { get; } = key;
+    public string? WholeValue { get; } = wholeValue;
+    public IDictionary<string, string?>? Values { get; } = values;
 
     public static PlaylistTagValue Parse(string content)
     {

@@ -2,18 +2,11 @@
 
 namespace Httpz.Hls;
 
-public class HlsKey
+public class HlsKey(HlsKeyMethod method, Uri uri, byte[]? iv)
 {
-    public HlsKeyMethod Method { get; }
+    public HlsKeyMethod Method { get; } = method;
 
-    public Uri Uri { get; }
+    public Uri Uri { get; } = uri;
 
-    public byte[]? Iv { get; }
-
-    public HlsKey(HlsKeyMethod method, Uri uri, byte[]? iv)
-    {
-        Method = method;
-        Uri = uri;
-        Iv = iv;
-    }
+    public byte[]? Iv { get; } = iv;
 }

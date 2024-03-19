@@ -2,24 +2,21 @@
 
 namespace Httpz.Hls;
 
-public class HlsStreamInfo
+public class HlsStreamInfo(
+    Uri uri,
+    int programId,
+    int bandwidth,
+    RectSize? resolution,
+    string? name
+)
 {
-    public int ProgramId { get; }
+    public int ProgramId { get; } = programId;
 
-    public int Bandwidth { get; }
+    public int Bandwidth { get; } = bandwidth;
 
-    public RectSize? Resolution { get; }
+    public RectSize? Resolution { get; } = resolution;
 
-    public string? Name { get; }
+    public string? Name { get; } = name;
 
-    public Uri Uri { get; }
-
-    public HlsStreamInfo(Uri uri, int programId, int bandwidth, RectSize? resolution, string? name)
-    {
-        ProgramId = programId;
-        Bandwidth = bandwidth;
-        Resolution = resolution;
-        Name = name;
-        Uri = uri;
-    }
+    public Uri Uri { get; } = uri;
 }

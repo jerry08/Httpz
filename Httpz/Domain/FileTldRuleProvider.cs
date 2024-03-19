@@ -7,19 +7,12 @@ namespace Httpz.Domain;
 /// <summary>
 /// FileTldRuleProvider
 /// </summary>
-public class FileTldRuleProvider : ITldRuleProvider
+/// <remarks>
+/// FileTldRuleProvider
+/// </remarks>
+/// <param name="fileName"></param>
+public class FileTldRuleProvider(string fileName) : ITldRuleProvider
 {
-    private readonly string _fileName;
-
-    /// <summary>
-    /// FileTldRuleProvider
-    /// </summary>
-    /// <param name="fileName"></param>
-    public FileTldRuleProvider(string fileName)
-    {
-        _fileName = fileName;
-    }
-
     ///<inheritdoc/>
     public async ValueTask<IEnumerable<TldRule>> BuildAsync()
     {
@@ -32,12 +25,12 @@ public class FileTldRuleProvider : ITldRuleProvider
 
     private async ValueTask<string> LoadFromFile()
     {
-        if (!File.Exists(_fileName))
+        if (!File.Exists(fileName))
         {
             throw new FileNotFoundException("Rule file does not exist");
         }
 
-        using var reader = File.OpenText(_fileName);
+        using var reader = File.OpenText(fileName);
         return await reader.ReadToEndAsync().ConfigureAwait(false);
     }
 }
