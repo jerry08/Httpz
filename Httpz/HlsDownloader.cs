@@ -143,37 +143,32 @@ public class HlsDownloader : Downloader
 
             var tasks = Enumerable
                 .Range(0, stream.Segments.Count)
-                .Select(
-                    i =>
-                        Task.Run(async () =>
-                        {
-                            using var access = await downloadSemaphore.AcquireAsync(
-                                cancellationToken
-                            );
+                .Select(i =>
+                    Task.Run(async () =>
+                    {
+                        using var access = await downloadSemaphore.AcquireAsync(cancellationToken);
 
-                            var segment = stream.Segments[i];
+                        var segment = stream.Segments[i];
 
-                            var outputPath =
-                                Path.Combine(Path.GetTempPath(), DateTime.Now.Ticks.ToString())
-                                + $"_{i}.tmp";
+                        var outputPath =
+                            Path.Combine(Path.GetTempPath(), DateTime.Now.Ticks.ToString())
+                            + $"_{i}.tmp";
 
-                            tempFiles.Add(outputPath);
+                        tempFiles.Add(outputPath);
 
-                            await DownloadAsync(
-                                segment.Uri.AbsoluteUri,
-                                outputPath,
-                                headers,
-                                null,
-                                false,
-                                cancellationToken
-                            );
+                        await DownloadAsync(
+                            segment.Uri.AbsoluteUri,
+                            outputPath,
+                            headers,
+                            null,
+                            false,
+                            cancellationToken
+                        );
 
-                            total++;
+                        total++;
 
-                            progress?.Report(
-                                (total / (double)stream.Segments.Count * 100.0) / 100.0
-                            );
-                        })
+                        progress?.Report((total / (double)stream.Segments.Count * 100.0) / 100.0);
+                    })
                 );
 
             await Task.WhenAll(tasks);
@@ -181,11 +176,8 @@ public class HlsDownloader : Downloader
             progress?.Report(1);
 
             tempFiles = tempFiles
-                .OrderBy(
-                    x =>
-                        Convert.ToInt64(
-                            Path.GetFileNameWithoutExtension(x).Split('_').LastOrDefault()
-                        )
+                .OrderBy(x =>
+                    Convert.ToInt64(Path.GetFileNameWithoutExtension(x).Split('_').LastOrDefault())
                 )
                 .ToList();
 
