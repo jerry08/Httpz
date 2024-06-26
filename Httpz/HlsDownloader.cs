@@ -37,13 +37,13 @@ public class HlsDownloader : Downloader
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         string url,
-        IDictionary<string, string>? headers = null,
+        IDictionary<string, string?>? headers = null,
         CancellationToken cancellationToken = default
     ) => await GetQualitiesAsync(new Uri(url), headers, cancellationToken);
 
     public async ValueTask<List<HlsStreamMetadata>> GetQualitiesAsync(
         Uri uri,
-        IDictionary<string, string>? headers = null,
+        IDictionary<string, string?>? headers = null,
         CancellationToken cancellationToken = default
     )
     {
