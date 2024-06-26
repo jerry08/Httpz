@@ -96,7 +96,7 @@ public class HlsDownloader : Downloader
     public async ValueTask DownloadAsync(
         HlsStream stream,
         string filePath,
-        IDictionary<string, string>? headers = null,
+        IDictionary<string, string?>? headers = null,
         IProgress<double>? progress = null,
         CancellationToken cancellationToken = default
     )
@@ -123,7 +123,7 @@ public class HlsDownloader : Downloader
     /// </summary>
     public async ValueTask DownloadAllThenMergeAsync(
         HlsStream stream,
-        IDictionary<string, string> headers,
+        IDictionary<string, string?> headers,
         string filePath,
         IProgress<double>? progress = null,
         int maxParallelDownloads = 10,
