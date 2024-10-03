@@ -1,6 +1,6 @@
 <Project>
 
-  <ItemGroup Condition="$(TargetFramework.Contains('net5')) != true and $(TargetFramework.Contains('net6')) != true">
+  <ItemGroup Condition="$(TargetFramework.Contains('net8')) != true">
     <Compile Remove="**\**\*.netcore.cs" />
     <None Include="**\**\*.netcore.cs" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
     <Compile Remove="**\netcore\**\*.cs" />

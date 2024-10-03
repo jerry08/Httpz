@@ -61,13 +61,8 @@ public static class HttpExtensions
     {
         var request = new HttpRequestMessage(HttpMethod.Head, requestUri);
 
-        for (var i = 0; i < headers.Count; i++)
-        {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(i).Key,
-                headers.ElementAt(i).Value
-            );
-        }
+        foreach (var (key, value) in headers)
+            request.Headers.TryAddWithoutValidation(key, value);
 
         return await http.SendAsync(
             request,
@@ -226,13 +221,9 @@ public static class HttpExtensions
     )
     {
         var request = new HttpRequestMessage(HttpMethod.Post, uri);
-        for (var i = 0; i < headers.Count; i++)
-        {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(i).Key,
-                headers.ElementAt(i).Value
-            );
-        }
+
+        foreach (var (key, value) in headers)
+            request.Headers.TryAddWithoutValidation(key, value);
 
         return await http.ExecuteAsync(request, cancellationToken);
     }
@@ -254,13 +245,9 @@ public static class HttpExtensions
     )
     {
         var request = new HttpRequestMessage(HttpMethod.Post, uri);
-        for (var i = 0; i < headers.Count; i++)
-        {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(i).Key,
-                headers.ElementAt(i).Value
-            );
-        }
+
+        foreach (var (key, value) in headers)
+            request.Headers.TryAddWithoutValidation(key, value);
 
         request.Content = content;
 
@@ -282,12 +269,11 @@ public static class HttpExtensions
     )
     {
         var request = new HttpRequestMessage(HttpMethod.Head, uri);
-        for (var i = 0; i < headers?.Count; i++)
+
+        if (headers is not null)
         {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(i).Key,
-                headers.ElementAt(i).Value
-            );
+            foreach (var (key, value) in headers)
+                request.Headers.TryAddWithoutValidation(key, value);
         }
 
         var response = await http.SendAsync(
@@ -341,12 +327,11 @@ public static class HttpExtensions
     )
     {
         var request = new HttpRequestMessage(HttpMethod.Get, uri);
-        for (var i = 0; i < headers?.Count; i++)
+
+        if (headers is not null)
         {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(i).Key,
-                headers.ElementAt(i).Value
-            );
+            foreach (var (key, value) in headers)
+                request.Headers.TryAddWithoutValidation(key, value);
         }
 
         return await http.ExecuteAsync(request, cancellationToken);

@@ -48,23 +48,19 @@ public class HttpZipStream : IDisposable
             {
                 return ContentLength;
             }
-            using (
-                var httpMessage = await httpClient.GetAsync(
-                    httpUrl,
-                    HttpCompletionOption.ResponseHeadersRead
-                )
-            )
+            using var httpMessage = await httpClient.GetAsync(
+                httpUrl,
+                HttpCompletionOption.ResponseHeadersRead
+            );
+            if (!httpMessage.IsSuccessStatusCode)
             {
-                if (!httpMessage.IsSuccessStatusCode)
-                {
-                    return -1;
-                }
-                ContentLength = httpMessage
-                    .Content.Headers.GetValues("Content-Length")
-                    .Select(x => long.Parse(x))
-                    .FirstOrDefault();
-                return ContentLength;
+                return -1;
             }
+            ContentLength = httpMessage
+                .Content.Headers.GetValues("Content-Length")
+                .Select(x => long.Parse(x))
+                .FirstOrDefault();
+            return ContentLength;
         }
         catch (Exception)
         {
@@ -222,25 +218,6 @@ public class HttpZipStream : IDisposable
         }
     }
 
-    [Obsolete]
-    public async ValueTask ExtractAsync(
-        List<HttpZipEntry> entryList,
-        Action<MemoryStream> resultCallback
-    )
-    {
-        try
-        {
-            foreach (var entry in entryList)
-            {
-                await ExtractAsync(entry, resultCallback);
-            }
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
     public async ValueTask ExtractAsync(HttpZipEntry entry, Action<MemoryStream> resultCallback)
     {
         try
@@ -299,15 +276,11 @@ public class HttpZipStream : IDisposable
                 var deflatedArray = new byte[entry.UncompressedSize];
                 using (var compressedStream = new MemoryStream(fileDataBuffer))
                 {
-                    using (
-                        var deflateStream = new System.IO.Compression.DeflateStream(
-                            compressedStream,
-                            CompressionMode.Decompress
-                        )
-                    )
-                    {
-                        await deflateStream.ReadAsync(deflatedArray, 0, deflatedArray.Length);
-                    }
+                    using var deflateStream = new System.IO.Compression.DeflateStream(
+                        compressedStream,
+                        CompressionMode.Decompress
+                    );
+                    await deflateStream.ReadAsync(deflatedArray, 0, deflatedArray.Length);
 
                     /*
                     using (var deflatedStream = new MemoryStream())

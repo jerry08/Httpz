@@ -7,5 +7,5 @@ public enum TldRuleDivision
 {
     Unknown,
     ICANN,
-    Private
+    Private,
 }

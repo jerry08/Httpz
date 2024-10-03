@@ -3,5 +3,5 @@
 public enum HlsPlaylistType
 {
     Master,
-    Stream
+    Stream,
 }

@@ -4,5 +4,5 @@ public enum HlsKeyMethod
 {
     None,
     Aes128,
-    SampleAes
+    SampleAes,
 }

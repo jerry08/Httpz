@@ -136,7 +136,7 @@ public class HlsDownloader : Downloader
         {
             using var downloadSemaphore = new ResizableSemaphore
             {
-                MaxCount = maxParallelDownloads
+                MaxCount = maxParallelDownloads,
             };
 
             var total = 0;

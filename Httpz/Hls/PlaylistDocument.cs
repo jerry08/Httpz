@@ -104,7 +104,7 @@ public class PlaylistDocument
         if (token is null || token.Type != PlaylistTokenType.Header)
             throw new PlaylistDocumentLoadException();
 
-        var context = new LoadContext { BaseUri = originalUri, };
+        var context = new LoadContext { BaseUri = originalUri };
 
         while (!tokenizer.EndOfStream)
         {
@@ -243,10 +243,9 @@ public class PlaylistDocument
             "AES-128" => HlsKeyMethod.Aes128,
             "SAMPLE-AES" => HlsKeyMethod.SampleAes,
             "NONE" => HlsKeyMethod.None,
-            _
-                => throw new NotSupportedException(
-                    $"HLS encryption method '{sMethod}' is not supported."
-                ),
+            _ => throw new NotSupportedException(
+                $"HLS encryption method '{sMethod}' is not supported."
+            ),
         };
 
         Uri? uri = null;

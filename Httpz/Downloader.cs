@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +45,7 @@ public class Downloader : IDownloader
     ) => await DownloadAsync(new Uri(url), filePath, headers, progress, append, cancellationToken);
 
     public async ValueTask DownloadAsync(
-        Uri url,
+        Uri uri,
         string filePath,
         IDictionary<string, string?>? headers = null,
         IProgress<double>? progress = null,
@@ -56,13 +55,12 @@ public class Downloader : IDownloader
     {
         var http = _httpClientFactory.CreateClient();
 
-        var request = new HttpRequestMessage(HttpMethod.Get, url);
-        for (var j = 0; j < headers?.Count; j++)
+        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        if (headers is not null)
         {
-            request.Headers.TryAddWithoutValidation(
-                headers.ElementAt(j).Key,
-                headers.ElementAt(j).Value
-            );
+            foreach (var (key, value) in headers)
+                request.Headers.TryAddWithoutValidation(key, value);
         }
 
         var response = await http.SendAsync(
@@ -88,7 +86,7 @@ public class Downloader : IDownloader
 
         var totalLength = response.Content.Headers.ContentLength ?? 0;
 
-        var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
 
         var dir = Path.GetDirectoryName(filePath);
         if (!Directory.Exists(dir))
@@ -112,6 +110,68 @@ public class Downloader : IDownloader
         finally
         {
             file?.Close();
+            stream?.Close();
+        }
+    }
+
+    public async ValueTask DownloadAsync(
+        string url,
+        Stream destination,
+        IDictionary<string, string?>? headers = null,
+        IProgress<double>? progress = null,
+        CancellationToken cancellationToken = default
+    ) => await DownloadAsync(new Uri(url), destination, headers, progress, cancellationToken);
+
+    public async ValueTask DownloadAsync(
+        Uri uri,
+        Stream destination,
+        IDictionary<string, string?>? headers = null,
+        IProgress<double>? progress = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var http = _httpClientFactory.CreateClient();
+
+        var request = new HttpRequestMessage(HttpMethod.Get, uri);
+
+        if (headers is not null)
+        {
+            foreach (var (key, value) in headers)
+                request.Headers.TryAddWithoutValidation(key, value);
+        }
+
+        var response = await http.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken
+        );
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new HttpRequestException(
+                $"Response status code does not indicate success: {(int)response.StatusCode} ({response.StatusCode})."
+                    + Environment.NewLine
+                    + "Request:"
+                    + Environment.NewLine
+                    + request
+            );
+        }
+
+        var totalLength = response.Content.Headers.ContentLength ?? 0;
+
+        using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+
+        try
+        {
+            await stream.CopyToAsync(
+                destination,
+                progress,
+                totalLength,
+                cancellationToken: cancellationToken
+            );
+        }
+        finally
+        {
             stream?.Close();
         }
     }

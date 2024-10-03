@@ -62,18 +62,6 @@ public class DomainParser : IDomainParser
         _domainNormalizer = domainNormalizer ?? new UriNormalizer();
     }
 
-    [Obsolete("Get is deprecated, please use Parse instead.", error: true)]
-    public DomainInfo Get(Uri domain)
-    {
-        return Parse(domain);
-    }
-
-    [Obsolete("Get is deprecated, please use Parse instead.", error: true)]
-    public DomainInfo Get(string domain)
-    {
-        return Parse(domain);
-    }
-
     ///<inheritdoc/>
     public DomainInfo Parse(Uri domain)
     {

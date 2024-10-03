@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,6 +8,22 @@ namespace Httpz;
 
 public interface IDownloader
 {
+    ValueTask DownloadAsync(
+        string url,
+        Stream destination,
+        IDictionary<string, string?>? headers = null,
+        IProgress<double>? progress = null,
+        CancellationToken cancellationToken = default
+    );
+
+    ValueTask DownloadAsync(
+        Uri uri,
+        Stream destination,
+        IDictionary<string, string?>? headers = null,
+        IProgress<double>? progress = null,
+        CancellationToken cancellationToken = default
+    );
+
     ValueTask DownloadAsync(
         string url,
         string filePath,
@@ -17,7 +34,7 @@ public interface IDownloader
     );
 
     ValueTask DownloadAsync(
-        Uri url,
+        Uri uri,
         string filePath,
         IDictionary<string, string?>? headers = null,
         IProgress<double>? progress = null,
